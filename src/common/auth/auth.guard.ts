@@ -10,10 +10,11 @@ import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Observable } from "rxjs";
+import { User } from "../../user/entities/user.entity";
 
 declare module "express" {
   interface Request {
-    user: JwtUserData;
+    user: User;
   }
 }
 
@@ -34,7 +35,12 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
     ]);
 
-    if (!requireLogin) {
+    const AdminRequire = this.reflector.getAllAndOverride<string>(
+      "require-admin",
+      [context.getClass(), context.getHandler()],
+    );
+
+    if (!requireLogin && !AdminRequire) {
       return true;
     }
 
@@ -46,7 +52,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const token = authorization.split(" ")[1];
-      request.user = this.jwtService.verify<JwtUserData>(token);
+      request.user = this.jwtService.verify<User>(token);
       return true;
     } catch (e) {
       throw new UnauthorizedException("token 失效，请重新登录");

@@ -13,7 +13,7 @@ export const TypeOrmConfig = TypeOrmModule.forRootAsync({
       database: configService.get("mysql_server_database"),
       synchronize: true,
       entities: [User, Role],
-      logging: true,
+      logging: false,
       poolSize: 10,
       connectorPackage: "mysql2",
       timezone: "+08:00",
