@@ -33,6 +33,7 @@ export class UserService {
   }
 
   async findAll(listUserDto: ListUserDto) {
+    console.log("listUserDto", listUserDto);
     const dto = plainToClass(ListUserDto, listUserDto);
     const { current, pageSize } = dto;
     const queryWrapper = BuildLike(dto, ["nick_name", "phone", "email"]);
@@ -64,8 +65,11 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const dto = plainToClass(User, updateUserDto);
-    const { affected } = await this.userRepository.update({ user_id: id }, dto);
+    console.log("updateUserDto", updateUserDto);
+    const { affected } = await this.userRepository.update(
+      { user_id: id },
+      updateUserDto,
+    );
     return affected ? "更新成功" : "更新失败";
   }
 

@@ -8,15 +8,19 @@ import {
   Delete,
   ForbiddenException,
   ParseBoolPipe,
+  Query,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { RequireAdmin, RequireLogin, UserInfo } from "../common/decorator";
+import { RequireAdmin, RequireLogin } from "../common/decorator";
 import { LoginUserDto } from "./dto/login-user.dto";
-import { ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiTags } from "@nestjs/swagger";
 import { ListUserDto } from "./dto/list-user.dto";
-import { UserConstants } from "../constants/system.constants";
+import {
+  SwaggerBody,
+  SwaggerQuery,
+} from "../common/decorator/swagger.decorator";
 
 @ApiTags("用户管理")
 @Controller("user")
@@ -24,48 +28,46 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @ApiOperation({ summary: "创建用户" })
   @RequireAdmin()
+  @SwaggerBody("创建用户", CreateUserDto)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @Post("login")
-  @ApiOperation({ summary: "用户登录" })
+  @SwaggerBody("用户登录", LoginUserDto, false)
   login(@Body() loginUserDto: LoginUserDto) {
     return this.userService.login(loginUserDto);
   }
 
   @Get()
   @RequireLogin()
-  @ApiOperation({ summary: "获取用户列表" })
-  findAll(@Body() listUserDto: ListUserDto) {
+  @SwaggerQuery("用户列表")
+  findAll(@Query() listUserDto: ListUserDto) {
     return this.userService.findAll(listUserDto);
   }
 
   @Get(":id")
-  @ApiOperation({ summary: "查询一个用户" })
+  @RequireLogin()
+  @SwaggerQuery("查询一个用户")
   findOne(@Param("id") id: string) {
     return this.userService.findOne(+id);
   }
 
   @Patch(":id")
-  @ApiOperation({ summary: "更新用户" })
+  @RequireAdmin()
+  @SwaggerBody("更新用户", UpdateUserDto)
   update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
   @Delete(":id")
-  @ApiOperation({ summary: "冻结用户" })
   @RequireAdmin()
+  @SwaggerBody("冻结用户", UpdateUserDto)
   frozen(
     @Param("id") id: string,
-    @UserInfo("user_type") user_type: UserConstants,
     @Body("is_frozen", ParseBoolPipe) is_frozen = true,
   ) {
-    if (UserConstants.ADMIN !== user_type) {
-      throw new ForbiddenException("用户权限不足");
-    }
     return this.userService.frozen(+id, is_frozen);
   }
 }
