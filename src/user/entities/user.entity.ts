@@ -39,9 +39,11 @@ export class User extends CommonEntity {
   @Column({ length: 11, nullable: true, comment: "手机号" })
   phone: string;
 
-  @ManyToMany(() => Role, { createForeignKeyConstraints: false })
+  @ManyToMany(() => Role, (role) => role.users, {
+    createForeignKeyConstraints: false,
+  })
   @JoinTable({
-    name: "user_roles",
+    name: "sys_user_roles",
     joinColumn: {
       name: "user_id",
       referencedColumnName: "user_id",

@@ -1,7 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
-export class UpdateRoleDto {
+export class FindRoleDto {
   @ApiProperty({ description: "角色名称", example: "", required: false })
   @IsOptional()
   role_name?: string;
@@ -10,7 +10,7 @@ export class UpdateRoleDto {
   @IsOptional()
   role_key?: string;
 
-  @ApiProperty({ description: "排序", example: 1, required: false })
+  @ApiProperty({ description: "角色状态", example: null, required: false })
   @IsOptional()
-  role_sort?: number;
+  is_frozen?: boolean;
 }

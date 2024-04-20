@@ -1,14 +1,17 @@
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { User } from "../../user/entities/user.entity";
 
 @Entity({
   name: "sys_role",
 })
-export class Role {
+export class Role extends BaseEntity {
   @PrimaryGeneratedColumn({ type: "bigint" })
   role_id: number;
 
@@ -26,4 +29,7 @@ export class Role {
 
   @CreateDateColumn()
   createTime: Date;
+
+  @ManyToMany(() => User, (user) => user.roles)
+  users: User[];
 }

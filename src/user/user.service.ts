@@ -77,7 +77,7 @@ export class UserService {
     const user = await this.findOne(id);
     user.is_frozen = is_frozen;
     await user.save();
-    return `冻结成功`;
+    return `操作成功`;
   }
 
   async login(loginUserDto: LoginUserDto) {
