@@ -8,6 +8,8 @@ import {
 import { Reflector } from "@nestjs/core";
 import { Observable } from "rxjs";
 import { Request } from "express";
+import { RoleKeyConstants } from "@/constants/system.constants";
+import { isSubsetOfArray } from "@/utils";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -22,17 +24,31 @@ export class AdminGuard implements CanActivate {
       return true;
     }
 
-    const user_type = request.user.user_type;
-    const AdminRequire = this.reflector.getAllAndOverride<string>(
-      "require-admin",
-      [context.getClass(), context.getHandler()],
-    );
+    const role_keys = request.user.roles.map((role) => role.role_key);
 
-    if (!AdminRequire) {
+    if (role_keys.includes(RoleKeyConstants.ADMIN)) {
       return true;
     }
 
-    if (AdminRequire !== user_type) {
+    const permission: string[] = request.user.roles.reduce((arr, item) => {
+      item.menus.forEach((permission) => {
+        if (arr.indexOf(permission) === -1 && permission.perms) {
+          arr.push(permission.perms);
+        }
+      });
+      return arr;
+    }, []);
+
+    const requiredPermissions = this.reflector.getAllAndOverride<string[]>(
+      "require-permission",
+      [context.getClass(), context.getHandler()],
+    );
+
+    if (!requiredPermissions) {
+      return true;
+    }
+
+    if (!isSubsetOfArray(requiredPermissions, permission)) {
       throw new ForbiddenException("用户权限不足");
     }
     return true;

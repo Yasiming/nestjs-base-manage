@@ -1,7 +1,8 @@
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigService } from "@nestjs/config";
-import { User } from "../user/entities/user.entity";
-import { Role } from "../role/entities/role.entity";
+import { User } from "@/system/entities/user.entity";
+import { Role } from "@/system/entities/role.entity";
+import { Menu } from "@/system/entities/menu";
 export const TypeOrmConfig = TypeOrmModule.forRootAsync({
   useFactory(configService: ConfigService) {
     return {
@@ -12,7 +13,7 @@ export const TypeOrmConfig = TypeOrmModule.forRootAsync({
       password: configService.get("mysql_server_password"),
       database: configService.get("mysql_server_database"),
       synchronize: true,
-      entities: [User, Role],
+      entities: [User, Role, Menu],
       logging: false,
       poolSize: 10,
       connectorPackage: "mysql2",

@@ -10,7 +10,7 @@ import { Request } from "express";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Observable } from "rxjs";
-import { User } from "../../user/entities/user.entity";
+import { User } from "@/system/entities/user.entity";
 
 declare module "express" {
   interface Request {
@@ -25,9 +25,7 @@ export class AuthGuard implements CanActivate {
     private readonly jwtService: JwtService,
   ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
 
     const requireLogin = this.reflector.getAllAndOverride("require-login", [
@@ -35,12 +33,7 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
     ]);
 
-    const AdminRequire = this.reflector.getAllAndOverride<string>(
-      "require-admin",
-      [context.getClass(), context.getHandler()],
-    );
-
-    if (!requireLogin && !AdminRequire) {
+    if (!requireLogin) {
       return true;
     }
 
@@ -52,7 +45,17 @@ export class AuthGuard implements CanActivate {
 
     try {
       const token = authorization.split(" ")[1];
-      request.user = this.jwtService.verify<User>(token);
+      const user_id = this.jwtService.verify<User>(token).user_id;
+      request.user = await User.findOne({
+        where: {
+          user_id,
+        },
+        relations: {
+          roles: {
+            menus: true,
+          },
+        },
+      });
       return true;
     } catch (e) {
       throw new UnauthorizedException("token 失效，请重新登录");

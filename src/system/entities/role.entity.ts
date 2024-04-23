@@ -1,19 +1,21 @@
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { User } from "../../user/entities/user.entity";
+import { CommonEntity } from "@/common/entity/common.entity";
+import { Menu } from "@/system/entities/menu";
+import { User } from "@/system/entities/user.entity";
 
 @Entity({
   name: "sys_role",
 })
-export class Role extends BaseEntity {
+export class Role extends CommonEntity {
   @PrimaryGeneratedColumn({ type: "bigint" })
-  role_id: number;
+  role_id: string;
 
   @Column({ length: 30, comment: "角色名称" })
   role_name: string;
@@ -29,6 +31,20 @@ export class Role extends BaseEntity {
 
   @CreateDateColumn()
   createTime: Date;
+
+  @ManyToMany(() => Menu, (menu) => menu.roles)
+  @JoinTable({
+    name: "sys_role_menu",
+    joinColumn: {
+      name: "role_id",
+      referencedColumnName: "role_id",
+    },
+    inverseJoinColumn: {
+      name: "menu_id",
+      referencedColumnName: "menu_id",
+    },
+  })
+  menus: Menu[];
 
   @ManyToMany(() => User, (user) => user.roles)
   users: User[];

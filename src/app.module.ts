@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmConfig } from "./config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
-import { UserModule } from "./user/user.module";
-import { RoleModule } from "./role/role.module";
 import { AuthModule } from "./common/auth/auth.module";
+import { SystemModule } from "@/system/system.module";
 
 @Module({
   imports: [
@@ -12,9 +11,8 @@ import { AuthModule } from "./common/auth/auth.module";
       envFilePath: "src/.env",
     }),
     TypeOrmConfig,
-    UserModule,
-    RoleModule,
     AuthModule,
+    SystemModule,
   ],
 })
 export class AppModule {}

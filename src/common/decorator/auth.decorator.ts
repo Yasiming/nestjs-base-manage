@@ -3,8 +3,10 @@ import {
   SetMetadata,
   createParamDecorator,
   ExecutionContext,
+  applyDecorators,
 } from "@nestjs/common";
-import { UserConstants } from "../../constants/system.constants";
+import { UserConstants } from "@/constants/system.constants";
+import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 
 export const RequireLogin = () => SetMetadata("require-login", true);
 
@@ -13,6 +15,10 @@ export const RequireAdmin = () =>
 
 export const RequirePermission = (...permissions: string[]) =>
   SetMetadata("require-permission", permissions);
+
+export const RequireLoginKey = (...permissions: string[]) => {
+  return applyDecorators(RequireLogin(), RequirePermission(...permissions));
+};
 
 export const UserInfo = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {

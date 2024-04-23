@@ -5,15 +5,15 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Role } from "../../role/entities/role.entity";
-import { CommonEntity } from "../../common/entity/common.entity";
+import { CommonEntity } from "@/common/entity/common.entity";
+import { Role } from "@/system/entities/role.entity";
 
 @Entity({
   name: "sys_user",
 })
 export class User extends CommonEntity {
   @PrimaryGeneratedColumn({ type: "bigint" })
-  user_id: number;
+  user_id: string;
 
   @Column({ length: 30, unique: true, comment: "用户账号" })
   user_name: string;
@@ -39,11 +39,9 @@ export class User extends CommonEntity {
   @Column({ length: 11, nullable: true, comment: "手机号" })
   phone: string;
 
-  @ManyToMany(() => Role, (role) => role.users, {
-    createForeignKeyConstraints: false,
-  })
+  @ManyToMany(() => Role, (role) => role.users)
   @JoinTable({
-    name: "sys_user_roles",
+    name: "sys_user_role",
     joinColumn: {
       name: "user_id",
       referencedColumnName: "user_id",
