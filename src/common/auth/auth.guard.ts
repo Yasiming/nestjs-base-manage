@@ -51,6 +51,7 @@ export class AuthGuard implements CanActivate {
           user_id,
         },
         relations: {
+          dept: true,
           roles: {
             menus: true,
           },

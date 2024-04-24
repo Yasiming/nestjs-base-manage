@@ -8,6 +8,8 @@ export class UserInfo {
   avatar: string;
   email: string;
   phone: string;
+  dept_id: number;
+  dept_name: string;
   roles: string[];
   permissions: string[];
 }

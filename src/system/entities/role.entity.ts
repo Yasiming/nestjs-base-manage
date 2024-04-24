@@ -7,8 +7,9 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { CommonEntity } from "@/common/entity/common.entity";
-import { Menu } from "@/system/entities/menu";
+import { Menu } from "@/system/entities/menu.entity";
 import { User } from "@/system/entities/user.entity";
+import { JoinColumn } from "typeorm/browser";
 
 @Entity({
   name: "sys_role",

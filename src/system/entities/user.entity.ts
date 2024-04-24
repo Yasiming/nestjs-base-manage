@@ -3,10 +3,13 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  JoinColumn,
 } from "typeorm";
 import { CommonEntity } from "@/common/entity/common.entity";
 import { Role } from "@/system/entities/role.entity";
+import { Dept } from "@/system/entities/dept.entity";
 
 @Entity({
   name: "sys_user",
@@ -52,4 +55,8 @@ export class User extends CommonEntity {
     },
   })
   roles: Role[];
+
+  @ManyToOne(() => Dept, (dept) => dept.users)
+  @JoinColumn({ name: "dept_id" })
+  dept: Dept;
 }

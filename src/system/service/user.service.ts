@@ -89,6 +89,8 @@ export class UserService {
     userInfo.avatar = user.avatar;
     userInfo.email = user.email;
     userInfo.phone = user.phone;
+    userInfo.dept_id = user.dept.dept_id;
+    userInfo.dept_name = user.dept.dept_name;
     userInfo.roles = user.roles.map((item) => item.role_name);
 
     if (
