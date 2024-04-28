@@ -27,10 +27,10 @@ export function Upload(field = "file", options: MulterOptions) {
 }
 
 //图片上传
-export function Image(field = "file") {
+export function Image(field = "file", fileSize = 2) {
   return Upload(field, {
     //上传文件大小限制
-    limits: { fileSize: Math.pow(1024, 2) * 4 },
+    limits: { fileSize: Math.pow(1024, 2) * fileSize },
     fileFilter: filterFilter("image"),
   } as MulterOptions);
 }

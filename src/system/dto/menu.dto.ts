@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
-import { MenuTypeConstants } from "../../constants/system.constants";
+import { MenuTypeConstants } from "@/constants/system.constants";
 import { PartialType } from "@nestjs/swagger";
 
 export class CreateMenuDto {
@@ -9,11 +9,9 @@ export class CreateMenuDto {
   @IsNotEmpty({ message: "菜单类型" })
   menu_type: MenuTypeConstants;
 
-  @IsNumber()
   @IsNotEmpty({ message: "父ID不能为空" })
   pid: number;
 
-  @IsNumber()
   @IsNotEmpty({ message: "排序" })
   menu_sort: number;
 

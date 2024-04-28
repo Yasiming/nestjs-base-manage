@@ -34,6 +34,11 @@ export class RoleController {
     return this.roleService.create(createRoleDto);
   }
 
+  @Get()
+  findAll() {
+    return this.roleService.findAll();
+  }
+
   @Get("assignRoleToUser")
   @RequireLoginKey("system:role:assignRoleToUser")
   @SwaggerQuery("给角色分配用户")

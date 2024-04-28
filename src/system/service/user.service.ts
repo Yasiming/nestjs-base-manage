@@ -89,9 +89,14 @@ export class UserService {
     userInfo.avatar = user.avatar;
     userInfo.email = user.email;
     userInfo.phone = user.phone;
-    userInfo.dept_id = user.dept.dept_id;
-    userInfo.dept_name = user.dept.dept_name;
-    userInfo.roles = user.roles.map((item) => item.role_name);
+    userInfo.user_type = user.user_type;
+    userInfo.dept_id = user.dept?.dept_id || null;
+    userInfo.dept_name = user.dept?.dept_name || null;
+    userInfo.roles = user.roles.map((item) => {
+      if (!item.is_frozen) {
+        return item.role_name;
+      }
+    });
 
     if (
       user.roles.map((item) => item.role_key).includes(RoleKeyConstants.ADMIN)

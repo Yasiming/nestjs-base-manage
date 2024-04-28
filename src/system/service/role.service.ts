@@ -8,12 +8,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Role } from "@/system/entities/role.entity";
 import { In, Repository } from "typeorm";
 import { User } from "@/system/entities/user.entity";
+import { Menu } from "@/system/entities/menu.entity";
+import { RoleKeyConstants } from "@/constants/system.constants";
 
 @Injectable()
 export class RoleService {
   constructor(
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Menu)
+    private readonly menuRepository: Repository<Menu>,
   ) {}
 
   async create(createRoleDto: CreateRoleDto) {
@@ -25,10 +29,18 @@ export class RoleService {
         role_key: createRoleDto.role_key,
       },
     ]);
+
     if (role) {
       throw new BadRequestException("角色已存在");
     }
-    await this.roleRepository.save(createRoleDto);
+    const newRole = new Role();
+    Object.assign(newRole, createRoleDto);
+    newRole.menus = await this.menuRepository.find({
+      where: {
+        menu_id: In(createRoleDto.menuIds),
+      },
+    });
+    await newRole.save();
     return "添加成功";
   }
 
@@ -66,11 +78,30 @@ export class RoleService {
   }
 
   async update(id: string, updateRoleDto: UpdateRoleDto) {
-    const { affected } = await this.roleRepository.update(
-      { role_id: id },
-      updateRoleDto,
-    );
-    return affected ? "更新成功" : "更新失败";
+    const role = await this.roleRepository.findOne({
+      where: {
+        role_id: id,
+      },
+    });
+
+    if (
+      role.role_key === RoleKeyConstants.ADMIN ||
+      updateRoleDto.role_key === RoleKeyConstants.ADMIN
+    ) {
+      throw new BadRequestException("超级管理员不允许修改");
+    }
+
+    Object.assign(role, updateRoleDto);
+
+    role.menus = await this.menuRepository.find({
+      where: {
+        menu_id: In(updateRoleDto.menuIds),
+      },
+    });
+
+    await role.save();
+
+    return "更新成功";
   }
 
   async is_frozen(frozenRoleDto: FrozenRoleDto) {
@@ -89,5 +120,13 @@ export class RoleService {
     role.is_frozen = is_frozen;
     await role.save();
     return "操作成功！";
+  }
+
+  findAll() {
+    return this.roleRepository.find({
+      relations: {
+        menus: true,
+      },
+    });
   }
 }

@@ -3,6 +3,7 @@ import { TypeOrmConfig } from "./config/typeorm.config";
 import { ConfigModule } from "@nestjs/config";
 import { AuthModule } from "./common/auth/auth.module";
 import { SystemModule } from "@/system/system.module";
+import { UploadModule } from "@/tools/upload/upload.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SystemModule } from "@/system/system.module";
     TypeOrmConfig,
     AuthModule,
     SystemModule,
+    UploadModule,
   ],
 })
 export class AppModule {}

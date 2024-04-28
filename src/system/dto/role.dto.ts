@@ -12,9 +12,12 @@ export class CreateRoleDto {
   role_key: string;
 
   @ApiProperty({ description: "排序", example: 1, required: true })
-  @IsNumber({}, { message: "排序需为数字类型" })
   @IsNotEmpty({ message: "排序不能为空" })
   role_sort: number;
+
+  @ApiProperty({ description: "菜单ID", example: [1, 2, 3], required: false })
+  @IsOptional()
+  menuIds: number[];
 }
 
 export class UpdateRoleDto {
@@ -29,6 +32,13 @@ export class UpdateRoleDto {
   @ApiProperty({ description: "排序", example: 1, required: false })
   @IsOptional()
   role_sort?: number;
+  @ApiProperty({ description: "排序", example: false, required: false })
+  @IsOptional()
+  is_frozen: boolean;
+
+  @ApiProperty({ description: "菜单ID", example: [1, 2, 3], required: false })
+  @IsOptional()
+  menuIds: number[];
 }
 
 export class FrozenRoleDto {

@@ -4,6 +4,7 @@ export class UserInfo {
   user_id: string;
   user_name: string;
   nick_name: string;
+  user_type: string;
   is_frozen: boolean;
   avatar: string;
   email: string;

@@ -9,7 +9,6 @@ import {
 import { CommonEntity } from "@/common/entity/common.entity";
 import { Menu } from "@/system/entities/menu.entity";
 import { User } from "@/system/entities/user.entity";
-import { JoinColumn } from "typeorm/browser";
 
 @Entity({
   name: "sys_role",
@@ -29,9 +28,6 @@ export class Role extends CommonEntity {
 
   @Column({ comment: "冻结", nullable: true, default: false })
   is_frozen: boolean;
-
-  @CreateDateColumn()
-  createTime: Date;
 
   @ManyToMany(() => Menu, (menu) => menu.roles)
   @JoinTable({

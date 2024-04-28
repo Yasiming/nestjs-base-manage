@@ -43,6 +43,8 @@ export class Menu extends CommonEntity {
   @Column({ nullable: true, comment: "权限" })
   perms: string;
 
-  @ManyToMany(() => Role, (role) => role.menus)
+  @ManyToMany(() => Role, (role) => role.menus, {
+    onDelete: "CASCADE",
+  })
   roles: Role[];
 }

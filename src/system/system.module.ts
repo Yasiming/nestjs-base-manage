@@ -12,10 +12,21 @@ import { RoleService } from "@/system/service/role.service";
 import { Dept } from "@/system/entities/dept.entity";
 import { DeptController } from "@/system/controller/dept.controller";
 import { DeptService } from "@/system/service/dept.service";
+import { DictData, DictType } from "@/system/entities/dict.entity";
+import { DictController } from "@/system/controller/dict.controller";
+import { DictService } from "@/system/service/dict.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role, Menu, Dept])],
-  controllers: [UserController, RoleController, MenuController, DeptController],
-  providers: [UserService, RoleService, MenuService, DeptService],
+  imports: [
+    TypeOrmModule.forFeature([User, Role, Menu, Dept, DictType, DictData]),
+  ],
+  controllers: [
+    UserController,
+    RoleController,
+    MenuController,
+    DeptController,
+    DictController,
+  ],
+  providers: [UserService, RoleService, MenuService, DeptService, DictService],
 })
 export class SystemModule {}

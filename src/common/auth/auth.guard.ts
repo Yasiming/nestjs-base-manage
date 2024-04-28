@@ -46,6 +46,7 @@ export class AuthGuard implements CanActivate {
     try {
       const token = authorization.split(" ")[1];
       const user_id = this.jwtService.verify<User>(token).user_id;
+
       request.user = await User.findOne({
         where: {
           user_id,
@@ -57,6 +58,7 @@ export class AuthGuard implements CanActivate {
           },
         },
       });
+
       return true;
     } catch (e) {
       throw new UnauthorizedException("token 失效，请重新登录");

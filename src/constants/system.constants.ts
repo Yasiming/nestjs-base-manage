@@ -13,3 +13,8 @@ export enum MenuTypeConstants {
   C = "C",
   F = "F",
 }
+
+export enum DictDefault {
+  Y = "Y",
+  N = "N",
+}

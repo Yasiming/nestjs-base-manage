@@ -68,4 +68,16 @@ export class CreateUserDto {
   @ApiProperty({ description: "昵称", example: "张三" })
   @IsNotEmpty()
   nick_name: string;
+
+  @ApiProperty({ description: "头像", example: "", required: false })
+  @IsOptional()
+  avatar?: string;
+
+  @ApiProperty({ description: "邮件", example: "", required: false })
+  @IsOptional()
+  email?: string;
+
+  @ApiProperty({ description: "手机号", example: "", required: false })
+  @IsOptional()
+  phone?: string;
 }

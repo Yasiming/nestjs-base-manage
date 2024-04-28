@@ -25,6 +25,9 @@ export class MenuService {
         where: {
           menu_type: In([MenuTypeConstants.M, MenuTypeConstants.C]),
         },
+        order: {
+          menu_sort: "ASC",
+        },
       });
     }
     return this.menuRepository.find({
@@ -36,11 +39,18 @@ export class MenuService {
           },
         },
       },
+      order: {
+        menu_sort: "ASC",
+      },
     });
   }
 
   findAll() {
-    return this.menuRepository.find();
+    return this.menuRepository.find({
+      order: {
+        menu_sort: "ASC",
+      },
+    });
   }
 
   findOne(id: number) {

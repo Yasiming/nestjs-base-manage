@@ -36,18 +36,18 @@ export class MenuController {
     return this.menuService.findAll();
   }
 
-  @Get(":id")
-  @RequireLoginKey("system:menu:findOne")
-  @SwaggerQuery("查询一个菜单信息")
-  findOne(@Param("id") id: string) {
-    return this.menuService.findOne(+id);
-  }
-
   @Get("routes")
   @RequireLogin()
   @SwaggerQuery("获取路由信息")
   getRouteList(@UserInfo() user: User) {
     return this.menuService.getRouteList(user);
+  }
+
+  @Get(":id")
+  @RequireLoginKey("system:menu:findOne")
+  @SwaggerQuery("查询一个菜单信息")
+  findOne(@Param("id") id: string) {
+    return this.menuService.findOne(+id);
   }
 
   @Patch(":id")
